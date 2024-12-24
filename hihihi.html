@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Random Gift Assignment - Christmas Round</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background: url('https://images.unsplash.com/photo-1514141457519-1c931b6a6f89') no-repeat center center fixed;
+            background-size: cover;
+            color: white;
+            text-align: center;
+        }
+        h1, p {
+            margin: 20px;
+        }
+        select, button {
+            padding: 10px;
+            font-size: 16px;
+            margin: 10px;
+            border: none;
+            border-radius: 5px;
+        }
+        button {
+            background-color: #ff6f61;
+            color: white;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #ff4a3d;
+        }
+
+        #result-box {
+            padding: 40px;
+            font-size: 24px;
+            font-weight: bold;
+            color: white;
+            text-align: center;
+            border-radius: 10px;
+            background-color: #f2f2f2;
+            margin: 20px auto;
+            width: 200px;
+        }
+
+        .hide-result {
+            display: inline-block;
+            margin: 5px 0;
+            background-color: #28a745;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            padding: 5px 10px;
+            cursor: pointer;
+        }
+        .hide-result:hover {
+            background-color: #218838;
+        }
+
+        /* Màu ô kết quả */
+        .result-green {
+            background-color: #2e8b57; /* Màu xanh cây thông Noel */
+        }
+
+        .result-grey {
+            background-color: #808080; /* Màu xám cho ô Trống */
+        }
+
+    </style>
+</head>
+<body>
+    <h1>Merry Christmas!</h1>
+    <p>Play a round of gift-giving! Each round consists of 3 assignments.</p>
+    
+    <!-- Dropdown to select the giver -->
+    <label for="giver-select">Choose your ID:</label>
+    <select id="giver-select">
+        <option value="Phước">Phước</option>
+        <option value="Chíp">Chíp</option>
+        <option value="Béo">Béo</option>
+    </select>
+    
+    <br>
+    <button onclick="startRound()">Start Round</button>
+
+    <!-- Display the result in a single box -->
+    <div id="result-box" class="result-grey">Trống</div>
+
+    <!-- Result display -->
+    <div id="round-result"></div>
+
+    <script>
+        const recipients = ["Chíp", "Béo", "Duyn"]; // Danh sách người nhận
+        let roundResults = []; // Lưu kết quả của mỗi vòng
+
+        function startRound() {
+            // Lấy danh tính người tặng từ dropdown
+            const giver = document.getElementById('giver-select').value;
+
+            // Reset trạng thái vòng trước
+            roundResults = [];
+            document.getElementById('round-result').innerHTML = "";
+
+            // Lọc danh sách người nhận, loại người tặng ra khỏi danh sách người nhận
+            let filteredRecipients = recipients.filter(name => name !== giver && !roundResults.includes(name));
+
+            // Random người nhận
+            const randomIndex = Math.floor(Math.random() * filteredRecipients.length);
+            const chosenRecipient = filteredRecipients[randomIndex];
+
+            // Cập nhật kết quả và hiển thị trong ô
+            roundResults.push(chosenRecipient);
+            document.getElementById('result-box').innerHTML = chosenRecipient;
+
+            // Đổi màu ô kết quả thành xanh nếu người nhận là Chíp, Béo, hoặc Phước
+            if (chosenRecipient === "Chíp" || chosenRecipient === "Béo" || chosenRecipient === "Phước") {
+                document.getElementById('result-box').classList.add('result-green');
+                document.getElementById('result-box').classList.remove('result-grey');
+            } else {
+                document.getElementById('result-box').classList.remove('result-green');
+                document.getElementById('result-box').classList.add('result-grey');
+            }
+
+            // Thêm nút Hide Result
+            const resultContainer = document.createElement('div');
+            resultContainer.id = `result-${giver}`;
+            resultContainer.innerHTML = 
+                `<button class="hide-result" onclick="hideResult()">Hide Result</button>`;
+            document.getElementById('round-result').appendChild(resultContainer);
+        }
+
+        function hideResult() {
+            // Trả ô kết quả về trạng thái "Trống" và màu xám
+            document.getElementById('result-box').innerHTML = "Trống";
+            document.getElementById('result-box').classList.remove('result-green');
+            document.getElementById('result-box').classList.add('result-grey');
+        }
+    </script>
+</body>
+</html>
